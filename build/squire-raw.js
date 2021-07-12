@@ -2371,6 +2371,7 @@ function monitorShiftKey ( event ) {
 }
 
 var onPaste = function ( event ) {
+    console.log("Paste detected");
     var clipboardData = event.clipboardData;
     var items = clipboardData && clipboardData.items;
     var choosePlain = this.isShiftDown;
@@ -2414,6 +2415,7 @@ var onPaste = function ( event ) {
         // the presence of text/rtf as an indicator to choose the html version
         // over the image.
         if ( hasImage && !( hasRTF && htmlItem ) ) {
+            console.info("Image paste detected");
             event.preventDefault();
             this.fireEvent( 'dragover', {
                 dataTransfer: clipboardData,
@@ -2552,6 +2554,7 @@ var onPaste = function ( event ) {
 // as far as I can see, there's no way to get the drop insertion point. So just
 // save an undo state and hope for the best.
 var onDrop = function ( event ) {
+    console.log("onDrop triggered");
     var types = event.dataTransfer.types;
     var l = types.length;
     var hasPlain = false;
@@ -2563,6 +2566,27 @@ var onDrop = function ( event ) {
             break;
         case 'text/html':
             hasHTML = true;
+            break;
+        case 'Files':
+            event.preventDefault();
+            console.log("Files drop detected. Do something!");
+            if (event.dataTransfer.files.length > 0) {
+                var file = event.dataTransfer.files[0];
+                var reader = new FileReader(); // Creating reader instance from FileReader() API
+
+                reader.addEventListener("load", function () { // Setting up base64 URL on image
+                    var src = reader.result;
+                    console.log("File as base64: " + src);
+                    editor.insertImage(src);
+                }, false);
+
+                const imageExtensions = ['jpg', 'jpeg', 'gif', 'png', 'webp'];
+                var fileExtension = file.name.split('.').pop();
+                if(imageExtensions.includes(fileExtension)) {
+                    reader.readAsDataURL(file); // Converting file into data URL
+                }
+            }
+
             break;
         default:
             return;
@@ -4306,6 +4330,7 @@ proto.insertElement = function ( el, range ) {
 };
 
 proto.insertImage = function ( src, attributes ) {
+    console.log("Src: " + src);
     var img = this.createElement( 'IMG', mergeObjects({
         src: src
     }, attributes, true ));
