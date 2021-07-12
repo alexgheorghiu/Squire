@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test1</title>
+    <style>
+        #editor {
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            min-height: 200px;
+            border: 1px solid #888;
+            padding: 1px;
+            background: transparent;
+            color: #2b2b2b;
+            font: 13px/1.35 Helvetica, arial, sans-serif;
+            cursor: text;
+        }
+    </style>
+</head>
+<body>
+    <span id="bold" class="fontStyle" data-value="normal">Bold</span>
+    <span id="italic" class="fontStyle" data-value="normal">Italic</span>
+    <span class="mmFontSize" data-value="18">18px</span>
+    <select id="setTextColour">
+        <option value="red" style="background:red">Apple</option>
+        <option value="yellow" style="background:yellow">Banana</option>
+        <option value="purple" style="background:purple">Grape</option>
+    </select>
+    <span id="insertImage" class="_prompt">Insert image</span>
+    <script type="text/javascript"  src="squire-raw.js"></script>
+    <div id="editor"></div>
+    <script type="text/javascript" charset="utf-8">
+        var node = document.getElementById( 'editor' );
+        var editor = new Squire( node, {
+            blockTag: 'p',
+            blockAttributes: {'class': 'paragraph'},
+            tagAttributes: {
+                ul: {'class': 'UL'},
+                ol: {'class': 'OL'},
+                li: {'class': 'listItem'},
+                a: {'target': '_blank'},
+                pre: {
+                    style: 'border-radius:3px;border:1px solid #ccc;padding:7px 10px;background:#f6f6f6;font-family:menlo,consolas,monospace;font-size:90%;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;'
+                },
+                code: {
+                    style: 'border-radius:3px;border:1px solid #ccc;padding:1px 3px;background:#f6f6f6;font-family:menlo,consolas,monospace;font-size:90%;'
+                },
+            }
+        });
+
+        window.onload = (event) => {
+            console.log('Page is fully loaded');
+
+            console.log(editor);
+
+            document.addEventListener( 'click', function ( e ) {
+                var id = e.target.id,
+                    value;
+                if ( id && editor && editor[ id ] ) {
+                    if (id === 'insertImage'){
+                        value = 'http://scriptoid.com/assets/images/logo.gif';
+                    }
+                    else {
+                        switch (e.target.className) {
+                            case 'prompt':
+                                value = prompt('Value:');
+                                break;
+                            case 'mmFontSize':
+                                value = parseInt(e.target.dataset.value);
+                            case 'fontStyle':
+                                switch (e.target.dataset.value) {
+                                    case 'regular':
+                                        break;
+                                    case 'italic':
+                                        break;
+                                }
+                                break;
+
+                            default:
+                                value = e.target.value;
+                        }
+                    }
+                    editor[ id ]( value );
+                }
+            }, false );
+
+        };
+    </script>
+</body>
+</html>

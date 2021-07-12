@@ -4309,6 +4309,9 @@ proto.insertImage = function ( src, attributes ) {
     var img = this.createElement( 'IMG', mergeObjects({
         src: src
     }, attributes, true ));
+    img.addEventListener("load", (evt)=>{
+        console.info("Image loaded!")
+    }, false);
     this.insertElement( img );
     return img;
 };

@@ -113,6 +113,10 @@ white-space: pre-wrap;word-wrap: break-word;overflow-wrap: break-word;border-rad
     <span id="undo">Undo</span>
     <span id="redo">Redo</span>
   </p>
+    <p>
+        <a href="#" onclick="alert(editor['getSelectedText']());">get selection</a> |
+        <a href="#" onclick="alert(editor['getDocument']());">get doc</a>
+    </p>
 </header>
 <script type="text/javascript" src="build/squire-raw.js"></script>
 <div id="editor"></div>
